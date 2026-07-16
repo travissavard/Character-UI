@@ -1,0 +1,358 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Character UI document, schema version 1",
+  "description": "A declarative Character UI trait catalog or portable profile snapshot. Runtime validation also checks identifier uniqueness, canonical built-in category labels, catalog cross-references, and profile instruction hashes.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/catalogDocument"
+    },
+    {
+      "$ref": "#/$defs/profileDocument"
+    }
+  ],
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 96,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$"
+    },
+    "shortText": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160,
+      "pattern": "\\S"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000
+    },
+    "instruction": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000,
+      "pattern": "\\S"
+    },
+    "semanticVersion": {
+      "type": "string",
+      "maxLength": 32,
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z.-]+)?$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-fA-F0-9]{64}$"
+    },
+    "category": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "order"],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "label": {
+          "$ref": "#/$defs/shortText"
+        },
+        "description": {
+          "$ref": "#/$defs/description"
+        },
+        "order": {
+          "type": "integer",
+          "minimum": -10000,
+          "maximum": 10000
+        }
+      }
+    },
+    "trait": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "categoryId", "description", "instruction", "tags", "order"],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "label": {
+          "$ref": "#/$defs/shortText"
+        },
+        "categoryId": {
+          "$ref": "#/$defs/identifier"
+        },
+        "description": {
+          "$ref": "#/$defs/description"
+        },
+        "instruction": {
+          "$ref": "#/$defs/instruction"
+        },
+        "tags": {
+          "type": "array",
+          "maxItems": 24,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 48,
+            "pattern": "\\S"
+          }
+        },
+        "order": {
+          "type": "integer",
+          "minimum": -10000,
+          "maximum": 10000
+        }
+      }
+    },
+    "preset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "description", "traitIds"],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "label": {
+          "$ref": "#/$defs/shortText"
+        },
+        "description": {
+          "$ref": "#/$defs/description"
+        },
+        "traitIds": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 500,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/identifier"
+          }
+        }
+      }
+    },
+    "catalog": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "name",
+        "description",
+        "author",
+        "license",
+        "categories",
+        "traits",
+        "presets"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "version": {
+          "$ref": "#/$defs/semanticVersion"
+        },
+        "name": {
+          "$ref": "#/$defs/shortText"
+        },
+        "description": {
+          "$ref": "#/$defs/description"
+        },
+        "author": {
+          "$ref": "#/$defs/shortText"
+        },
+        "license": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "pattern": "\\S"
+        },
+        "sourceUrl": {
+          "type": "string",
+          "format": "uri",
+          "maxLength": 500
+        },
+        "categories": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 50,
+          "items": {
+            "$ref": "#/$defs/category"
+          }
+        },
+        "traits": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 500,
+          "items": {
+            "$ref": "#/$defs/trait"
+          }
+        },
+        "presets": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "$ref": "#/$defs/preset"
+          }
+        }
+      }
+    },
+    "catalogDocument": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "schemaVersion", "kind", "catalog"],
+      "properties": {
+        "format": {
+          "const": "character-ui"
+        },
+        "schemaVersion": {
+          "const": 1
+        },
+        "kind": {
+          "const": "catalog"
+        },
+        "catalog": {
+          "$ref": "#/$defs/catalog"
+        }
+      }
+    },
+    "traitSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["catalogId", "catalogVersion", "traitId", "catalogName", "license"],
+      "properties": {
+        "catalogId": {
+          "$ref": "#/$defs/identifier"
+        },
+        "catalogVersion": {
+          "$ref": "#/$defs/semanticVersion"
+        },
+        "traitId": {
+          "$ref": "#/$defs/identifier"
+        },
+        "catalogName": {
+          "$ref": "#/$defs/shortText"
+        },
+        "license": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "pattern": "\\S"
+        }
+      }
+    },
+    "selectedTraitSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "key",
+        "label",
+        "categoryId",
+        "categoryLabel",
+        "description",
+        "instruction",
+        "order",
+        "instructionHash",
+        "source"
+      ],
+      "properties": {
+        "key": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "label": {
+          "$ref": "#/$defs/shortText"
+        },
+        "categoryId": {
+          "$ref": "#/$defs/identifier"
+        },
+        "categoryLabel": {
+          "$ref": "#/$defs/shortText"
+        },
+        "description": {
+          "$ref": "#/$defs/description"
+        },
+        "instruction": {
+          "$ref": "#/$defs/instruction"
+        },
+        "order": {
+          "type": "integer",
+          "minimum": -10000,
+          "maximum": 10000
+        },
+        "instructionHash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "source": {
+          "$ref": "#/$defs/traitSource"
+        }
+      }
+    },
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "description",
+        "compiler",
+        "categoryOrder",
+        "selectedTraits",
+        "createdAt",
+        "updatedAt"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "name": {
+          "$ref": "#/$defs/shortText"
+        },
+        "description": {
+          "$ref": "#/$defs/description"
+        },
+        "compiler": {
+          "const": "system-markdown-v1"
+        },
+        "categoryOrder": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 50,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/identifier"
+          }
+        },
+        "selectedTraits": {
+          "type": "array",
+          "maxItems": 500,
+          "items": {
+            "$ref": "#/$defs/selectedTraitSnapshot"
+          }
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "profileDocument": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "schemaVersion", "kind", "profile"],
+      "properties": {
+        "format": {
+          "const": "character-ui"
+        },
+        "schemaVersion": {
+          "const": 1
+        },
+        "kind": {
+          "const": "profile"
+        },
+        "profile": {
+          "$ref": "#/$defs/profile"
+        }
+      }
+    }
+  }
+}

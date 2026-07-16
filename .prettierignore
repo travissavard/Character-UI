@@ -1,0 +1,7 @@
+node_modules
+dist
+coverage
+apps/web/public/registry
+apps/desktop/release
+design-concepts
+package-lock.json

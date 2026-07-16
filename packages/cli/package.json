@@ -1,0 +1,42 @@
+{
+  "name": "@character-ui/cli",
+  "version": "0.1.0",
+  "description": "Local Character UI studio server and document CLI.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/travissavard/Character-UI.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://travissavard.github.io/Character-UI/",
+  "bugs": {
+    "url": "https://github.com/travissavard/Character-UI/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "bin": {
+    "character-ui": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "files": [
+    "dist",
+    "README.md",
+    "TRAITS_LICENSE"
+  ],
+  "scripts": {
+    "prebuild": "npm run build -w @character-ui/core && npm run build -w @character-ui/local-storage",
+    "build": "node scripts/build.mjs && node scripts/copy-web-assets.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.1"
+  }
+}

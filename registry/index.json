@@ -1,0 +1,18 @@
+{
+  "format": "character-ui-registry",
+  "schemaVersion": 1,
+  "packs": [
+    {
+      "id": "community.clear-writing",
+      "name": "Clear Writing",
+      "version": "1.0.0",
+      "description": "A small CC0 pack for readable, direct, and well-structured answers.",
+      "author": "Character UI contributors",
+      "license": "CC0-1.0",
+      "path": "packs/clear-writing.charui",
+      "sha256": "f999dd41da5643d3378bfca691aedcd12f66b1c26d3ee210b9138a0c5f1aaa36",
+      "traitCount": 6,
+      "presetCount": 1
+    }
+  ]
+}

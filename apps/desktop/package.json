@@ -1,0 +1,93 @@
+{
+  "name": "@character-ui/desktop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Installable Character UI desktop application.",
+  "author": "Character UI contributors",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/main.cjs",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "start": "electron .",
+    "package:win": "electron-builder --win nsis",
+    "package:dir": "electron-builder --dir"
+  },
+  "dependencies": {
+    "@character-ui/core": "0.1.0",
+    "@character-ui/local-storage": "0.1.0"
+  },
+  "devDependencies": {
+    "electron": "43.1.1",
+    "electron-builder": "^26.15.3",
+    "esbuild": "^0.28.1"
+  },
+  "build": {
+    "appId": "dev.characterui.app",
+    "productName": "Character UI",
+    "asar": true,
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "package.json",
+      "LICENSE",
+      "TRAITS_LICENSE"
+    ],
+    "extraResources": [
+      {
+        "from": "../web/dist",
+        "to": "web",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "protocols": [
+      {
+        "name": "Character UI",
+        "schemes": [
+          "characterui"
+        ]
+      }
+    ],
+    "fileAssociations": [
+      {
+        "ext": "charui",
+        "name": "Character UI Document",
+        "description": "Character UI trait catalog or profile",
+        "mimeType": "application/vnd.character-ui+json",
+        "role": "Editor"
+      }
+    ],
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        "nsis"
+      ],
+      "artifactName": "Character-UI-${version}-Setup.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "category": "public.app-category.productivity"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "category": "Utility"
+    }
+  }
+}
