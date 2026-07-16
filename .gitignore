@@ -3,6 +3,7 @@ dist/
 coverage/
 .vite/
 .cache/
+.vercel/
 .prove-it/
 apps/web/public/registry/
 apps/desktop/release/
