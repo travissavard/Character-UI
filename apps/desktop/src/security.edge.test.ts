@@ -1,4 +1,4 @@
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
@@ -19,7 +19,7 @@ describe('desktop security malformed and boundary inputs', () => {
   });
 
   it('maps the root URL to index and rejects malformed, null, and slash traversal paths', () => {
-    const root = join('C:', 'Character UI', 'web');
+    const root = resolve('test-fixtures', 'Character UI', 'web');
     expect(resolveWebAsset(root, 'character-ui-app://app/')).toBe(join(root, 'index.html'));
     expect(resolveWebAsset(root, 'not a url')).toBeNull();
     expect(resolveWebAsset(root, 'character-ui-app://app/%E0%A4%A')).toBeNull();

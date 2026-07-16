@@ -1,4 +1,4 @@
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
@@ -17,7 +17,7 @@ describe('desktop trust boundaries', () => {
   });
 
   it('keeps custom-protocol paths inside the web bundle', () => {
-    const root = join('C:', 'Character UI', 'web');
+    const root = resolve('test-fixtures', 'Character UI', 'web');
     expect(resolveWebAsset(root, 'character-ui-app://app/assets/main.js')).toBe(
       join(root, 'assets', 'main.js'),
     );
