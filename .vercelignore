@@ -1,0 +1,16 @@
+node_modules/
+dist/
+coverage/
+.vite/
+.cache/
+.vercel/
+.prove-it/
+apps/web/public/registry/
+apps/desktop/release/
+playwright-report/
+test-results/
+*.log
+.env
+.env.local
+.DS_Store
+Thumbs.db
